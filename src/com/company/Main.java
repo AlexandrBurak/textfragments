@@ -15,13 +15,18 @@ public class Main {
         Scanner sc1 = new Scanner(new File("input1.txt"));
         Scanner sc2 = new Scanner(new File("input2.txt"));
         ArrayList<String> txt = new ArrayList<>();
+        ArrayList<Integer> useless = new ArrayList<>();
         while(sc1.hasNextLine()){
             txt.add(sc1.nextLine());
         }
         //String str = new String(text);
+        ArrayList<String> frags = new ArrayList<>();
         ArrayList<String> lst = new ArrayList<>();
+        String buff = "";
         while(sc2.hasNextLine()){
-            lst.add(sc2.nextLine().replaceAll("\\[[0-9]\\]",""));
+            buff = sc2.nextLine();
+            lst.add(buff.replaceAll("\\[[0-9]\\]",""));
+            frags.add(buff);
         }
         String str = "";
         for(int i = 0; i < txt.size(); i++){
@@ -29,7 +34,11 @@ public class Main {
             for(int j = 0; j < lst.size(); j++){
                 j++;
                 String c = String.valueOf(j);
+                String tmp = str;
                 str = str.replaceAll("\\["+c+"\\]", lst.get(j-1));
+                if(!tmp.equals(str)){
+                    useless.add(Integer.valueOf(c));
+                }
                 txt.set(i, str);
                 j--;
             }
@@ -67,5 +76,20 @@ public class Main {
             pw.println(arlst.get(i));
         }
         pw.flush();
+        ArrayList<Integer> tsk = new ArrayList<>();
+        for(int i = 0; i < arlst.size(); i++){
+            //System.out.println(useless.indexOf(arlst.get(i)));
+            if(useless.indexOf(arlst.get(i)) == -1){
+                tsk.add(arlst.get(i));
+            }
+        }
+        Collections.sort(tsk);
+        System.out.println(frags);
+        pw = new PrintWriter(new File("output2.txt"));
+        for(int i = 0; i < tsk.size(); i++){
+            pw.println(frags.get(tsk.get(i) - 1));
+        }
+        pw.flush();
+
     }
 }
